@@ -26,9 +26,10 @@ steps:
   args: 
   - '-c'
   - | 
-    gcloud --project=$PROJECT_ID --quite beta secrets versions access latest --secret="gke" >> tmp.txt
-    gcloud --project=$PROJECT_ID --quite beta secrets versions access latest --secret="docker-registry" >> tmp.txt
-    gcloud --project=$PROJECT_ID --quite beta secrets versions access latest --secret="redis" >> tmp.txt
+    gcloud components install beta --quiet
+    gcloud --project=$PROJECT_ID secrets versions access latest --secret="gke" >> tmp.txt
+    gcloud --project=$PROJECT_ID secrets versions access latest --secret="docker-registry" >> tmp.txt
+    gcloud --project=$PROJECT_ID secrets versions access latest --secret="redis" >> tmp.txt
     source tmp.txt
     env
     gcloud container clusters get-credentials --zone=$_GKE_ZONE $_GKE_NAME
