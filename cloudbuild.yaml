@@ -23,12 +23,19 @@ steps:
 - id: 'Deploy application to cluster'
   name: 'gcr.io/k8s-skaffold/skaffold:v0.20.0'
   entrypoint: 'bash'
+  env:
+  - 'GKE_ZONE=eurupe-west1'
+  - 'GKE_NAME=gke-cluster'
+  - 'DOCKER_REGISTRY=gcr.io/$PROJECT_ID'
+  - 'REDIS_HOST=redis'
+  - 'REDIS_PORT=6379'
   args: 
   - '-c'
   - > 
     source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="gke"`;
     source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="docker-registry"`;
     source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="redis"`;
+    env;
     gcloud container clusters get-credentials --zone=$GKE_ZONE $GKE_NAME;
     sed -i -e "s/cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' \'{ print$2 }\'/$REDIS_HOST:$REDIS_PORT/g" kubernetes-manifests/cartservice.yaml;
     cat kubernetes-manifests/cartservice.yaml;
