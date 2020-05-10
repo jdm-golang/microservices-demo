@@ -25,6 +25,7 @@ steps:
   entrypoint: 'bash'
   args: 
   - '-c'
+  - | 
     gcloud components install beta --quiet
     gcloud --project=$PROJECT_ID secrets versions access latest --secret="gke" >> tmp.txt
     gcloud --project=$PROJECT_ID secrets versions access latest --secret="docker-registry" >> tmp.txt
