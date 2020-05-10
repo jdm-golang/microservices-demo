@@ -9,6 +9,16 @@
 # Example invocation:
 # `gcloud builds submit --config=cloudbuild.yaml --substitutions=_ZONE=us-central1-b,_CLUSTER=demo-app-staging .`
 
+# Params to pass
+# - cluster-zone
+# - cluster-name
+# - redis-host
+# - redis-port
+
+# cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' '{ print$2 }'
+
+# skaffold run --default-repo=gcr.io/
+
 steps:
 - id: 'Deploy application to cluster'
   name: 'gcr.io/k8s-skaffold/skaffold:v0.20.0'
@@ -16,8 +26,13 @@ steps:
   args: 
   - '-c'
   - > 
-    gcloud container clusters get-credentials --zone=$_ZONE $_CLUSTER;
-    skaffold run -f=skaffold.yaml --default-repo=gcr.io/$PROJECT_ID;
+    source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="gke"`;
+    source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="docker-registry"`;
+    source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="redis"`;
+    gcloud container clusters get-credentials --zone=$GKE_ZONE $GKE_NAME;
+    sed -i -e "s/cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' \'{ print$2 }\'/$REDIS_HOST:$REDIS_PORT/g" kubernetes-manifests/cartservice.yaml;
+    cat kubernetes-manifests/cartservice.yaml;
+    skaffold run -f=skaffold.yaml --default-repo=$DOCKER_REGISTRY;
 
 # Add more power, and more time, for heavy Skaffold build
 timeout: '3600s'
