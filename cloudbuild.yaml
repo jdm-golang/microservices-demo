@@ -44,13 +44,13 @@ steps:
     cat kubernetes-manifests/cartservice.yaml
     skaffold run -f=skaffold.yaml --default-repo=$_DOCKER_REGISTRY
 
-substitutions:
-    _GKE_ZONE: eurupe-west1
-    _GKE_NAME: gke-cluster
-    _DOCKER_REGISTRY: gcr.io
-    _REDIS_HOST: redis
-    _REDIS_PORT: port
-    _SUB_VALUE: unused
+# substitutions:
+#     _GKE_ZONE: eurupe-west1
+#     _GKE_NAME: gke-cluster
+#     _DOCKER_REGISTRY: gcr.io
+#     _REDIS_HOST: redis
+#     _REDIS_PORT: port
+#     _SUB_VALUE: unused
 
 # Add more power, and more time, for heavy Skaffold build
 timeout: '3600s'
