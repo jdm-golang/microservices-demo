@@ -39,10 +39,10 @@ steps:
   - | 
     source tmp.txt
     env
-    gcloud container clusters get-credentials --zone=$_GKE_ZONE $_GKE_NAME
-    sed -i -e "s/cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' \'{ print$2 }\'/$_REDIS_HOST:$_REDIS_PORT/g" kubernetes-manifests/cartservice.yaml
+    gcloud container clusters get-credentials --zone=$$_GKE_ZONE $$_GKE_NAME
+    sed -i -e "s/cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' \'{ print$2 }\'/$$_REDIS_HOST:$$_REDIS_PORT/g" kubernetes-manifests/cartservice.yaml
     cat kubernetes-manifests/cartservice.yaml
-    skaffold run -f=skaffold.yaml --default-repo=$_DOCKER_REGISTRY
+    skaffold run -f=skaffold.yaml --default-repo=$$_DOCKER_REGISTRY
 
 # substitutions:
 #     _GKE_ZONE: eurupe-west1
