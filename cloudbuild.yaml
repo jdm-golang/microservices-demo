@@ -26,9 +26,10 @@ steps:
   args: 
   - '-c'
   - | 
-    source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="gke"`
-    source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="docker-registry"`
-    source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="redis"`
+    gcloud --project=$PROJECT_ID beta secrets versions access latest --secret="gke" >> tmp.txt
+    gcloud --project=$PROJECT_ID beta secrets versions access latest --secret="docker-registry" >> tmp.txt
+    gcloud --project=$PROJECT_ID beta secrets versions access latest --secret="redis" >> tmp.txt
+    source tmp.txt
     env
     gcloud container clusters get-credentials --zone=$_GKE_ZONE $_GKE_NAME
     sed -i -e "s/cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' \'{ print$2 }\'/$_REDIS_HOST:$_REDIS_PORT/g" kubernetes-manifests/cartservice.yaml
