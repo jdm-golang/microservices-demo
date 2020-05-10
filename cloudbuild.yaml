@@ -23,12 +23,6 @@ steps:
 - id: 'Deploy application to cluster'
   name: 'gcr.io/k8s-skaffold/skaffold:v0.20.0'
   entrypoint: 'bash'
-  env:
-  - 'GKE_ZONE=eurupe-west1'
-  - 'GKE_NAME=gke-cluster'
-  - 'DOCKER_REGISTRY=gcr.io/$PROJECT_ID'
-  - 'REDIS_HOST=redis'
-  - 'REDIS_PORT=6379'
   args: 
   - '-c'
   - > 
@@ -36,10 +30,18 @@ steps:
     source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="docker-registry"`;
     source `gcloud --project=$PROJECT_ID secrets versions access latest --secret="redis"`;
     env;
-    gcloud container clusters get-credentials --zone=$GKE_ZONE $GKE_NAME;
-    sed -i -e "s/cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' \'{ print$2 }\'/$REDIS_HOST:$REDIS_PORT/g" kubernetes-manifests/cartservice.yaml;
+    gcloud container clusters get-credentials --zone=$_GKE_ZONE $_GKE_NAME;
+    sed -i -e "s/cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' \'{ print$2 }\'/$_REDIS_HOST:$_REDIS_PORT/g" kubernetes-manifests/cartservice.yaml;
     cat kubernetes-manifests/cartservice.yaml;
-    skaffold run -f=skaffold.yaml --default-repo=$DOCKER_REGISTRY;
+    skaffold run -f=skaffold.yaml --default-repo=$_DOCKER_REGISTRY;
+
+substitutions:
+    _GKE_ZONE: eurupe-west1
+    _GKE_NAME: gke-cluster
+    _DOCKER_REGISTRY: gcr.io/$PROJECT_ID
+    _REDIS_HOST: redis
+    _REDIS_PORT: 6379
+    _SUB_VALUE: unused
 
 # Add more power, and more time, for heavy Skaffold build
 timeout: '3600s'
