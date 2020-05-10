@@ -40,8 +40,9 @@ steps:
     source tmp.txt
     env
     gcloud container clusters get-credentials --zone=$$_GKE_ZONE $$_GKE_NAME
-    sed -i -e "s/cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'"' \'{ print$2 }\'/$$_REDIS_HOST:$$_REDIS_PORT/g" kubernetes-manifests/cartservice.yaml
-    cat kubernetes-manifests/cartservice.yaml
+    export _REDIS_ASIS=`cat kubernetes-manifests/cartservice.yaml | grep REDIS -A1 | grep value | awk -F'\"' '{ print$2 }'`
+    echo $_REDIS_ASIS
+    sed -i -e "s/$$_REDIS_ASIS/$$_REDIS_HOST:$$_REDIS_PORT/g" kubernetes-manifests/cartservice.yaml
     skaffold run -f=skaffold.yaml --default-repo=$$_DOCKER_REGISTRY
 
 # substitutions:
