@@ -38,9 +38,9 @@ steps:
 substitutions:
     _GKE_ZONE: eurupe-west1
     _GKE_NAME: gke-cluster
-    _DOCKER_REGISTRY: gcr.io/$PROJECT_ID
+    _DOCKER_REGISTRY: gcr.io
     _REDIS_HOST: redis
-    _REDIS_PORT: 6379
+    _REDIS_PORT: port
     _SUB_VALUE: unused
 
 # Add more power, and more time, for heavy Skaffold build
