@@ -35,7 +35,7 @@ steps:
 substitutions:
   _ENV: production
   _PATH: src/${_SVC}
-  _SVC: place-holder
+  _SVC: placeholder
 
 images:
   - "gcr.io/$PROJECT_ID/${_ENV}-${_SVC}"
