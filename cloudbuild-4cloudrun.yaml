@@ -1,0 +1,40 @@
+steps:
+  # Pull last build for caching
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
+    args: ["-c", "docker pull gcr.io/$PROJECT_ID/${_ENV}-${_SVC}:latest || exit 0"]
+  # Build new image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/${_ENV}-${_SVC}",
+        "--cache-from",
+        "gcr.io/$PROJECT_ID/${_ENV}-${_SVC}",
+        "${_PATH}",
+      ]
+  # Push new image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/${_ENV}-${_SVC}"]
+  # Deploy to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "${_ENV}-${_SVC}",
+        "--image",
+        "gcr.io/$PROJECT_ID/${_ENV}-${_SVC}",
+        "--region",
+        "us-central1",
+      ]
+
+substitutions:
+  _ENV: production
+  _PATH: src/${_SVC}
+  _SVC: place-holder
+
+images:
+  - "gcr.io/$PROJECT_ID/${_ENV}-${_SVC}"
