@@ -30,12 +30,15 @@ steps:
         "gcr.io/$PROJECT_ID/${_ENV}-${_SVC}",
         "--region",
         "us-central1",
+        "--update-env-vars",
+        "${_EVARS}"
       ]
 
 substitutions:
   _ENV: production
   _PATH: src/${_SVC}
   _SVC: placeholder
+  _EVARS: 
 
 images:
   - "gcr.io/$PROJECT_ID/${_ENV}-${_SVC}"
