@@ -27,6 +27,6 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
-EXPOSE 7000
+EXPOSE 8080
 
 ENTRYPOINT [ "node", "server.js" ]
