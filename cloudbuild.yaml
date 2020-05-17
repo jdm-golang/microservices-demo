@@ -34,6 +34,8 @@ steps:
 - id: 'Deploy application to cluster'
   name: 'gcr.io/k8s-skaffold/skaffold:v1.9.1'
   entrypoint: 'bash'
+  env:
+  - 'SHORT_SHA=$SHORT_SHA'
   args: 
   - '-c'
   - | 
