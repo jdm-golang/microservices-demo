@@ -32,7 +32,7 @@ steps:
     gcloud --project=$PROJECT_ID secrets versions access latest --secret="redis" >> tmp.txt
 
 - id: 'Deploy application to cluster'
-  name: 'gcr.io/k8s-skaffold/skaffold:v0.20.0'
+  name: 'gcr.io/k8s-skaffold/skaffold:v1.9.1'
   entrypoint: 'bash'
   args: 
   - '-c'
