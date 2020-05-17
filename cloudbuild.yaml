@@ -47,7 +47,7 @@ steps:
     # We don't want to deploy LoadGenerator
     rm kubernetes-manifests/loadgenerator.yaml
     sed -i -e "s/$$_REDIS_ASIS/$$_REDIS_HOST:$$_REDIS_PORT/g" kubernetes-manifests/cartservice.yaml
-    skaffold build -f=skaffold.yaml --default-repo=$$_DOCKER_REGISTRY
+    skaffold build -vdebug -f=skaffold.yaml --default-repo=$$_DOCKER_REGISTRY
 
 # substitutions:
 #     _GKE_ZONE: eurupe-west1
